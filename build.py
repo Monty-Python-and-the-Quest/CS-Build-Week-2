@@ -2,6 +2,7 @@ import requests
 import json
 from api_key import API_KEY
 import time
+from pprint import pprint
 
 # URL
 url = "https://lambda-treasure-hunt.herokuapp.com/api"
@@ -22,15 +23,19 @@ def init():
 def status():
     r = requests.post(f'{url}/adv/status', headers=headers)
     data = r.json()
-    print(data)
+    print(data["cooldown"])
     return data
 
 # MOVE FUNCTION
 def move(payload):
     r_move = requests.post(f'{url}/adv/move', data=json.dumps(payload), headers=headers)
     data = r_move.json()
-
+    
+    info = []
+    info.append(data)
     # when we move, need to print to map.txt
+    with open('map.txt', 'a+') as outfile:
+          json.dump(info, outfile, indent=2)
 
     print(data)
     return data
@@ -48,7 +53,7 @@ def cooldown_print(seconds):
 # init()
 
 # Testing - moving
-# move(({"direction":"s", "next_room_id": "0"}))
+move(({"direction":"w"}))
 
 # Testing - if moving south from room 10 (back to room 0)
 # move(({"direction":"s", "next_room_id": "0"}))
@@ -56,6 +61,6 @@ def cooldown_print(seconds):
 # Testing - if moving north from room 0 (initial room)
 # move(({"direction":"n", "next_room_id": "10"}))
 
-# status()
+status()
 
 # cooldown_print()
