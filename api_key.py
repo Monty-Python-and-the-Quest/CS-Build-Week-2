@@ -1,1 +1,1 @@
-API_KEY = "Token cd70496cee43bd12d485cc24a4393931a88bc905"
+API_KEY = "Token"
