@@ -45,7 +45,7 @@ def cooldown_print(seconds):
 
 # To run type - python build.py, uncomment each function to use
 
-# init()
+init()
 
 # Testing - moving
 # move(({"direction":"s", "next_room_id": "0"}))
