@@ -3,6 +3,9 @@ import json
 from api_key import API_KEY
 import time
 
+# For O(1) time complexity for append and pop operations
+from collections import deque
+
 # URL
 url = "https://lambda-treasure-hunt.herokuapp.com/api"
 
@@ -69,23 +72,109 @@ def cooldown_print(seconds):
 traversal_path = []
 
 # Inverse player path
-steps_to_start = []
-
-unexplored = {}
-visited = {}
+inverse_path = []
+# Exits are here
+unexplored = []
+visited = set()
 
 # Set up inverse relationship with directions
 inverse_directions = { "n": "s", "e": "w", "w": "e", "s": "n" }
 
 # Working on ALGO
 
-def start():
-    starting_room = init()
-    room_id = starting_room["room_id"]
-    directions = starting_room["exits"]
-    print(f"Directions: {directions}")
-    cooldown_print(starting_room["cooldown"])
-    new_room = move({"direction": directions[0]})
-    cooldown_print(new_room["cooldown"])
+# def start():
+#     starting_room = init()
+#     room_id = starting_room["room_id"]
+#     directions = starting_room["exits"]
+#     print(f"Directions: {directions}")
+#     cooldown_print(starting_room["cooldown"])
+#
+#     if directions[0] == "w" and not visited:
+#         enque()
+#
+#     new_room = move({"direction": directions[0]})
+#     cooldown_print(new_room["cooldown"])
 
-start()
+def setup_current_room():
+    current_room = init()
+    current_room_id = current_room["room_id"]
+    current_room_exits = current_room["exits"]
+    visited.add(current_room_id)
+    print(f"Visited: , {visited}")
+    for exit in current_room_exits:
+        unexplored.append(exit)
+    print(f"Room Exits: , {current_room_exits}")
+
+    # Prints cool down
+    cooldown_print(current_room["cooldown"])
+
+def step_forward():
+    # new_room = init()
+    # print(f"New room: , {new_room}")
+    # cooldown_print(new_room["cooldown"])
+    # newer_room = init()
+    # print(f"Newer room: , {newer_room}")
+    # new_room_id = new_room['room_id']
+
+    if len(unexplored) == 0:
+        step_back()
+    else:
+        print(f"Unexplored: , {unexplored}")
+
+        # Get the first available direction
+        direction = unexplored.pop(0)
+
+        print(f"Direction: , {direction}")
+
+        # Add the inverse direction so we can retrace our path
+        inverse_path.append(inverse_directions[direction])
+
+        # Travel there (NEED TO FIX FORMAT ITS BEING SENT--- MAIN PROBLEM)
+        move((f'{"direction":"{direction}"}'))
+
+        # Reinit new room
+        upcoming_room = init()
+        print(f"Upcoming room: , {upcoming_room}")
+        cooldown_print(upcoming_room["cooldown"])
+
+        upcoming_room_id = upcoming_room["room_id"]
+
+        if upcoming_room_id not in visited:
+            # Add current room to visited
+            setup_current_room()
+            # Remove the inverse direction since we don't need to go back
+            unexplored.remove(inverse_directions[direction])
+
+        # Add the direction we traveled to traversal_path
+        traversal_path.append(direction)
+
+        # Prints cool down
+        cooldown_print(upcoming_room["cooldown"])
+
+
+def step_back():
+    back_room = init()
+
+    # Go back one room and check again
+    direction = inverse_path.pop()
+    traversal_path.append(direction)
+    move({"direction": direction})
+
+    # Prints cool down
+    cooldown_print(back_room["cooldown"])
+
+
+def algo():
+    room = init()
+    room_id = room["room_id"]
+
+    while len(visited) < 5:
+        if len(unexplored) > 0:
+            step_forward()
+        else:
+            step_back()
+
+setup_current_room()
+algo()
+
+
