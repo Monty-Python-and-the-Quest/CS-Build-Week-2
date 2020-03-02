@@ -37,7 +37,7 @@ class Player:
                             headers=headers,
                             data=json.dumps(data))
        
-
+        self.room = json.loads(res.text)
         self.cooldown = self.room['cooldown']  
         return res.json()
 
@@ -49,10 +49,11 @@ class Player:
         res = requests.post(self.base_url + endpoint,
                             headers=headers,
                             data=json.dumps(data))
-
+        
+        self.room = json.loads(res.text)
         self.cooldown = self.room['cooldown']  
         print(res.json())
-
+        return res.json()
 # Take
 
     def take(self):
@@ -62,7 +63,8 @@ class Player:
                                 headers=headers,
                                 data=json.dumps(data))
             print(f'------- {res.text} TAKING TREASURE')
-
+            
+            self.room = json.loads(res.text)
             self.cooldown = self.room['cooldown']  
 
             if self.room['errors']:
@@ -74,4 +76,4 @@ class Player:
 
 P = Player("User 20600", 2)
 
-print(P.move("n"))
+print(P.move("s"))
