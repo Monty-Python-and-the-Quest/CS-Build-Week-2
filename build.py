@@ -82,6 +82,12 @@ def move(payload):
         need_to_explore.remove(room_id)
         cooldown_print(cooldown)
         setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
+
         remove_inverse_direction_from_exits(direction["direction"])
         step_forward()
 
@@ -89,6 +95,11 @@ def move(payload):
         print('NEW ROOM CENTER (NOT IN VISITED):', room_id)
         cooldown_print(cooldown)
         setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
         if len(unexplored_exits) == 1:
             move(inverse_direction)
         else:
@@ -99,6 +110,11 @@ def move(payload):
         print('GO BACKWARDS:', room_id)
         cooldown_print(cooldown)
         setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
         remove_inverse_direction_from_exits(direction["direction"])
         # Change move direction to unexplored_exits(0)
         move_direction = unexplored_exits.pop(0)
@@ -110,6 +126,12 @@ def move(payload):
         print('GO BACK:', room_id)
         cooldown_print(cooldown)
         setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
+
         remove_inverse_direction_from_exits(direction["direction"])
         step_forward()
 
@@ -117,6 +139,11 @@ def move(payload):
         print('NEW ROOM CENTER IN VISITED (NEED TO EXPLORE):', room_id)
         cooldown_print(cooldown)
         setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
         remove_inverse_direction_from_exits(direction["direction"])
         step_forward()
 
@@ -124,6 +151,11 @@ def move(payload):
         print('NEW ROOM CENTER NOT IN VISITED (NEED TO EXPLORE):', room_id)
         cooldown_print(cooldown)
         setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
         remove_inverse_direction_from_exits(direction["direction"])
         step_forward()
 
@@ -139,6 +171,11 @@ def move(payload):
         # step_forward()
 
         setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
         remove_inverse_direction_from_exits(direction["direction"])
         step_forward()
 
@@ -283,8 +320,8 @@ def algo():
         else:
             step_back()
 
-setup_current_room()
-algo()
+# setup_current_room()
+# algo()
 
-# init()
+init()
 # move(({"direction":"e", "next_room_id": "218"}))
