@@ -270,5 +270,3 @@ def algo():
 
 setup_current_room()
 algo()
-
-
