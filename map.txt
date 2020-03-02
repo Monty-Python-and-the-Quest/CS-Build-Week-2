@@ -1,0 +1,80 @@
+# This is where the rooms will append once we traverse through. Need to make function where it does it every time we move.
+[
+  {
+    "room_id": 63,
+    "title": "A misty room",
+    "description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+    "coordinates": "(60,64)",
+    "elevation": 0,
+    "terrain": "NORMAL",
+    "players": [],
+    "items": [],
+    "exits": [
+      "n",
+      "s",
+      "w"
+    ],
+    "cooldown": 15.0,
+    "errors": [],
+    "messages": [
+      "You have walked south."
+    ]
+  }
+][
+  {
+    "room_id": 72,
+    "title": "A misty room",
+    "description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+    "coordinates": "(60,65)",
+    "elevation": 0,
+    "terrain": "NORMAL",
+    "players": [
+      "User 20623"
+    ],
+    "items": [],
+    "exits": [
+      "s",
+      "w"
+    ],
+    "cooldown": 15.0,
+    "errors": [],
+    "messages": [
+      "You have walked north."
+    ]
+  }
+][
+  {
+    "cooldown": 5.7751,
+    "errors": [
+      "Cooldown Violation: +5s CD"
+    ]
+  }
+][
+  {
+    "cooldown": 5.778417,
+    "errors": [
+      "Cooldown Violation: +5s CD"
+    ]
+  }
+][
+  {
+    "cooldown": 5.775299,
+    "errors": [
+      "Cooldown Violation: +5s CD"
+    ]
+  }
+][
+  {
+    "cooldown": 5.7546669999999995,
+    "errors": [
+      "Cooldown Violation: +5s CD"
+    ]
+  }
+][
+  {
+    "cooldown": 5.786184,
+    "errors": [
+      "Cooldown Violation: +5s CD"
+    ]
+  }
+]
