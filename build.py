@@ -78,7 +78,7 @@ def move(payload):
 
     #  Change center room
     if (len(unexplored_exits) == 0) and (room_id not in visited) and (room_id in need_to_explore):
-        print('NEW ROOM CENTER (NEED TO EXPLORE):', room_id)
+        print('NEW ROOM CENTER 0 NOT IN VISITED (NEED TO EXPLORE):', room_id)
         need_to_explore.remove(room_id)
         cooldown_print(cooldown)
         setup_current_room()
@@ -99,7 +99,7 @@ def move(payload):
         print('GO BACKWARDS:', room_id)
         cooldown_print(cooldown)
         setup_current_room()
-
+        remove_inverse_direction_from_exits(direction["direction"])
         # Change move direction to unexplored_exits(0)
         move_direction = unexplored_exits.pop(0)
         direction["direction"] = move_direction
@@ -114,15 +114,30 @@ def move(payload):
         step_forward()
 
     elif (len(unexplored_exits) > 0) and (room_id in visited) and (room_id in need_to_explore):
-        print('NEW ROOM CENTER (NEED TO EXPLORE):', room_id)
+        print('NEW ROOM CENTER IN VISITED (NEED TO EXPLORE):', room_id)
         cooldown_print(cooldown)
         setup_current_room()
         remove_inverse_direction_from_exits(direction["direction"])
         step_forward()
 
     elif (len(unexplored_exits) > 0) and (room_id not in visited) and (room_id in need_to_explore):
-        print('NEW ROOM CENTER (NEED TO EXPLORE):', room_id)
+        print('NEW ROOM CENTER NOT IN VISITED (NEED TO EXPLORE):', room_id)
         cooldown_print(cooldown)
+        setup_current_room()
+        remove_inverse_direction_from_exits(direction["direction"])
+        step_forward()
+
+    # If room_id is in visted and need_to_explore
+    elif (len(unexplored_exits) >= 0) and (room_id in visited) and (room_id in need_to_explore):
+        print('ROOM IN VISTED AND NEED TO EXPLORE CENTER:', room_id)
+        need_to_explore.remove(room_id)
+        cooldown_print(cooldown)
+
+        # move_direction = unexplored_exits.pop(0)
+        # direction["direction"] = move_direction
+        # move(direction)
+        # step_forward()
+
         setup_current_room()
         remove_inverse_direction_from_exits(direction["direction"])
         step_forward()
@@ -270,3 +285,6 @@ def algo():
 
 setup_current_room()
 algo()
+
+# init()
+# move(({"direction":"e", "next_room_id": "218"}))
