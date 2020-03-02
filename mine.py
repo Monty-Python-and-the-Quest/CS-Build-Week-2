@@ -11,7 +11,7 @@ def proof_of_work(last_block, difficulty):
 
     while valid_proof(lb_json, proof, difficulty) is False:
 
-        proof += 1
+        proof += 1 
 
     return proof
 
