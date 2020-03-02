@@ -79,6 +79,8 @@ def move(payload):
     #  Change center room
     if (len(unexplored_exits) == 0) and (room_id not in visited) and (room_id in need_to_explore):
         print('NEW ROOM CENTER 0 NOT IN VISITED (NEED TO EXPLORE):', room_id)
+        info = []
+        info.append(data)
         need_to_explore.remove(room_id)
         cooldown_print(cooldown)
         setup_current_room()
@@ -93,6 +95,9 @@ def move(payload):
 
     elif (len(unexplored_exits) == 0) and (room_id not in visited):
         print('NEW ROOM CENTER (NOT IN VISITED):', room_id)
+        info = []
+        info.append(data)
+        need_to_explore.append(room_id)
         cooldown_print(cooldown)
         setup_current_room()
 
@@ -100,14 +105,16 @@ def move(payload):
         with open('map.txt', 'a+') as outfile:
             json.dump        (info, outfile, indent=2)
 
-        if len(unexplored_exits) == 1:
-            move(inverse_direction)
-        else:
-            remove_inverse_direction_from_exits(direction["direction"])
-            step_forward()
+            if len(unexplored_exits) == 1:
+                move(inverse_direction)
+            else:
+                remove_inverse_direction_from_exits(direction["direction"])
+                step_forward()
 
     elif (len(unexplored_exits) == 0) and (room_id in visited):
         print('GO BACKWARDS:', room_id)
+        info = []
+        info.append(data)
         cooldown_print(cooldown)
         setup_current_room()
 
@@ -124,6 +131,8 @@ def move(payload):
 
     elif (len(unexplored_exits) == 0) and (room_id in visited) and (room_id in need_to_explore):
         print('GO BACK:', room_id)
+        info = []
+        info.append(data)
         cooldown_print(cooldown)
         setup_current_room()
 
@@ -137,6 +146,8 @@ def move(payload):
 
     elif (len(unexplored_exits) > 0) and (room_id in visited) and (room_id in need_to_explore):
         print('NEW ROOM CENTER IN VISITED (NEED TO EXPLORE):', room_id)
+        info = []
+        info.append(data)
         cooldown_print(cooldown)
         setup_current_room()
 
@@ -149,6 +160,8 @@ def move(payload):
 
     elif (len(unexplored_exits) > 0) and (room_id not in visited) and (room_id in need_to_explore):
         print('NEW ROOM CENTER NOT IN VISITED (NEED TO EXPLORE):', room_id)
+        info = []
+        info.append(data)
         cooldown_print(cooldown)
         setup_current_room()
 
@@ -320,8 +333,8 @@ def algo():
         else:
             step_back()
 
-# setup_current_room()
-# algo()
+setup_current_room()
+algo()
 
-init()
+# init()
 # move(({"direction":"e", "next_room_id": "218"}))
