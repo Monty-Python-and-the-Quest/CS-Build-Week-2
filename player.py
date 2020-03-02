@@ -76,8 +76,46 @@ class Player:
             else:
                 print(self.room['messages'])
 
+# Drop
 
+    def drop(self):
+            endpoint = "/adv/drop/"
+            data = {"name": "treasure"}
+            res = requests.post(self.base_url + endpoint,
+                                headers=headers,
+                                data=json.dumps(data))
+            print(f'------- {res.text} DROP TREASURE')
+
+            
+            self.room = json.loads(res.text)
+
+            self.cooldown = self.room['cooldown']  
+
+            if self.room['errors']:
+                print(self.room['errors'])
+            else:
+                print(self.room['messages'])
+         
+# Staus
+
+    def status(self):
+        endpoint = "/adv/status/"
+        res = requests.post(self.base_url + endpoint, headers=headers)
+        print(f'------- {res.text} STATUS')
+
+        self.p_status = json.loads(res.text)  
+        self.cd = self.p_status['cooldown']  
+
+# Examine
+
+    def examine(self):
+        endpoint = "/adv/examine/"
+        data = {"name": "Wishing Well"}
+        res = requests.post(self.base_url + endpoint,
+                            headers=headers,
+                            data=json.dumps(data))
+        print(f'------- {res.text} WISHING WELL INFO')
 
 P = Player("User 20600", 2)
 
-print(P.move("n"))
+print(P.status())
