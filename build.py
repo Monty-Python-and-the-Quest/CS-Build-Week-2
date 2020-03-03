@@ -243,6 +243,11 @@ def take_treasure(self):
         else:
             print('Inventory is full')
 
+def sell_treasure(self):
+    if player.room['title'] == "Shop":
+        player.sell()
+        time.sleep(player.cooldown)
+
 # To run type - python build.py, uncomment each function to use
 
 # init()
@@ -350,6 +355,7 @@ def step_back():
 def algo():
     while len(visited) < 500:
         take_treasure(player.room)
+        sell_treasure(player.room)
         if len(unexplored_exits) > 0:
             step_forward()    
         else:

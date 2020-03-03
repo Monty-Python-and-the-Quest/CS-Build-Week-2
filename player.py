@@ -155,6 +155,23 @@ class Player:
         self.cooldown = self.pray_status['cooldown']  
         return res.json()
 
+# Sell 
+    def sell(self):
+        endpoint = "/adv/sell/"
+        data = {"name": "treasure"}
+        res = requests.post(self.base_url + endpoint,
+                            headers=headers,
+                            data=json.dumps(data))
+        print(f'------- {res.text} SELL TREASURE')
+
+        self.room = json.loads(res.text)
+        self.cooldown = self.room['cooldown']  
+
+        if self.room['errors']:
+            print(self.room['errors'])
+        else:
+            print(self.room['messages'])
+
 
 
 # # # Test 
