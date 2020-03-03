@@ -1,0 +1,18 @@
+[
+  {
+    "name": "User 20593",
+    "cooldown": 1.0,
+    "encumbrance": 0,
+    "strength": 10,
+    "speed": 10,
+    "gold": 100,
+    "bodywear": null,
+    "footwear": null,
+    "inventory": [],
+    "abilities": [],
+    "status": [],
+    "has_mined": false,
+    "errors": [],
+    "messages": []
+  }
+]

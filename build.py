@@ -9,6 +9,9 @@ from collections import deque
 
 # Player path
 traversal_path = []
+# Inverse player path
+inverse_path = []
+
 room_id = []
 room_cd = 0
 new_id = []
@@ -19,8 +22,6 @@ direction = {
 inverse_direction = {
     "direction": ""
 }
-# Inverse player path
-inverse_path = []
 # Exits are here
 unexplored_exits = []
 current_room = []
@@ -53,7 +54,48 @@ def init():
 def status():
     r = requests.post(f'{url}/adv/status', headers=headers)
     data = r.json()
-    print(data["cooldown"])
+    info = []
+    info.append(data)
+
+    # when we check status, we print to player_status.txt
+    with open('player_status.txt', 'w') as outfile:
+        json.dump(info, outfile, indent=2)
+
+    print(data)
+    return data
+
+# TAKE FUNCTION
+def take(payload):
+    r = requests.post(f'{url}/adv/take', data=json.dumps(payload), headers=headers)
+    data = r.json()
+    info = []
+    info.append(data)
+
+    # when we check status, we print to player_status.txt
+    with open('player_status.txt', 'w') as outfile:
+        json.dump(info, outfile, indent=2)
+
+    print(data)
+    return data
+
+# SELL FUNCTION
+def sell(payload):
+    r = requests.post(f'{url}/adv/sell', data=json.dumps(payload), headers=headers)
+    data = r.json()
+    print(data)
+    cooldown = data["cooldown"]
+    print('Cooldown:', cooldown)
+    cooldown_print(cooldown)
+    return data
+
+# CONFIRM SELL FUNCTION
+def confirm_sell(payload):
+    r = requests.post(f'{url}/adv/sell', data=json.dumps(payload), headers=headers)
+    data = r.json()
+    print(data)
+    cooldown = data["cooldown"]
+    print('Cooldown:', cooldown)
+    cooldown_print(cooldown)
     return data
 
 # Needs to input the true direction in function
@@ -178,6 +220,8 @@ def move(payload):
     elif (len(unexplored_exits) >= 0) and (room_id in visited) and (room_id in need_to_explore):
         print('ROOM IN VISTED AND NEED TO EXPLORE CENTER:', room_id)
         need_to_explore.remove(room_id)
+        info = []
+        info.append(data)
         cooldown_print(cooldown)
 
         # move_direction = unexplored_exits.pop(0)
@@ -208,6 +252,7 @@ def move(payload):
         step_back()
 
     else:
+        print('ELSE:', room_id)
         cooldown_print(cooldown)
         step_forward()
 
@@ -284,14 +329,81 @@ def step_forward():
     # print(f"Direction: {move_direction}")
     # print(f"Inverse direction: {inverse_direction}")
 
-    if len(unexplored_exits) == 0:
-        print(f"Unexplored Exits: {unexplored_exits}")
-        # Remove the inverse direction since we don't need to go back
-        # inverse_path.remove(inverse_directions[move_direction])
-        move(direction)
+    if len(unexplored_exits) >= 0:
+        # print(f"Unexplored Exits 0 (last exit to explore): {unexplored_exits}")
+
+        # Remove the inverse direction since we are moving back to same space (center)
+        if room_id[0] in visited and len(inverse_path) == 0:
+            # print(f"Inverse path = 0 (last exit to explore): {unexplored_exits}")
+
+            # Add the direction to traversal path
+            traversal_path.append(move_direction)
+
+            # Add the inverse direction so we can retrace our path
+            inverse_path.append(inverse_directions[move_direction])
+
+            move(direction)
+
+            # Remove the inverse direction since we are moving back to same space (center)
+        elif room_id[0] not in visited and len(inverse_path) == 0 and (room_id[0] in need_to_explore):
+            # print(f"Inverse path = 0 NEED TO EXPLORE (last exit to explore): {unexplored_exits}")
+
+            # Add the direction to traversal path
+            traversal_path.append(move_direction)
+
+            # Add the inverse direction so we can retrace our path
+            inverse_path.append(inverse_directions[move_direction])
+
+            move(direction)
+
+        # Remove the inverse direction since we are moving back to same space (center)
+        elif room_id[0] in visited and len(inverse_path) > 0:
+            # print(f"Inverse path > 0 (last exit to explore): {unexplored_exits}")
+            inverse_path.pop(0)
+
+            # Add the direction to traversal path
+            traversal_path.append(move_direction)
+
+            # Add the inverse direction so we can retrace our path
+            inverse_path.append(inverse_directions[move_direction])
+
+            move(direction)
+
+        elif room_id[0] in visited and len(inverse_path) == 1:
+            # print(f"Inverse path = 1 (last exit to explore): {unexplored_exits}")
+
+            # Add the direction to traversal path
+            traversal_path.append(move_direction)
+
+            # Add the inverse direction so we can retrace our path
+            inverse_path.append(inverse_directions[move_direction])
+
+            move(direction)
+
+        elif room_id[0] in visited and len(inverse_path) > 0 and (room_id[0] in need_to_explore):
+            # print(f"Inverse path > 0 (last exit to explore and need to explore): {unexplored_exits}")
+            inverse_path.pop(0)
+
+            # Add the direction to traversal path
+            traversal_path.append(move_direction)
+
+            # Add the inverse direction so we can retrace our path
+            inverse_path.append(inverse_directions[move_direction])
+
+            move(direction)
+
+        else:
+            # print(f"Unexplored Exits = 0 ELSE (last exit to explore): {unexplored_exits}")
+            # Add the direction to traversal path
+            traversal_path.append(move_direction)
+
+            # Add the inverse direction so we can retrace our path
+            inverse_path.append(inverse_directions[move_direction])
+
+            move(direction)
 
     else:
-        print(f"Unexplored Exits: {unexplored_exits}")
+        print(f"Unexplored Exits ELSE: {unexplored_exits}")
 
         # Prints cool down
         cooldown_print(room_cd)
@@ -299,8 +411,12 @@ def step_forward():
         # Add the direction to traversal path
         traversal_path.append(move_direction)
 
-        # Add the inverse direction so we can retrace our path
-        inverse_path.append(inverse_directions[move_direction])
+        if room_id[0] in visited and len(inverse_path) > 0:
+            inverse_path.pop(0)
+
+        else:
+            # Add the inverse direction so we can retrace our path
+            inverse_path.append(inverse_directions[move_direction])
 
         # Travel there (NEED TO FIX FORMAT ITS BEING SENT--- MAIN PROBLEM)
         move(direction)
@@ -340,5 +456,17 @@ def algo():
 # algo()
 
 # Uncomment to move manually
-move(({"direction":"n"}))
-# move(({"direction":"s", "next_room_id": "259"}))
+# move(({"direction":"w"}))
+
+# Uncomment to move manually with room id
+# move(({"direction":"s", "next_room_id": "19"}))
+
+# Uncomment to get user status and write to player_status.txt
+# status()
+
+# Uncomment both to sell something (put name of treasure in name parameter)
+# sell(({"name":"tiny treasure"}))
+# confirm_sell(({"name":"tiny treasure", "confirm":"yes"}))
+
+# Uncomment to get treasure (put name of treasure in name parameter)
+# take(({"name":"tiny treasure"}))
