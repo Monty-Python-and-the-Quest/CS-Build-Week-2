@@ -232,10 +232,11 @@ def cooldown_print(seconds):
 
 
 def take_treasure(self):
-    if len(player.room['items']) > 0:
+    j = len(player.room['items'])   
+    if j > 0:
         player.status()
-        time.sleep(player.cooldown)
         # cooldown_print(player.cooldown)
+        time.sleep(player.cooldown)
         if len(player.p_status['inventory']) < player.p_status['strength']:
             player.take()
             time.sleep(player.cooldown)
@@ -348,16 +349,20 @@ def step_back():
 
 def algo():
     while len(visited) < 500:
+        take_treasure(player.room)
         if len(unexplored_exits) > 0:
-            take_treasure()
-            step_forward()
+            step_forward()    
         else:
             step_back()
 
 # Uncomment to initialize and run algo
+player.init()
+time.sleep(5)
 setup_current_room()
 algo()
 
 # Uncomment to move manually
 # move(({"direction":"n"}))
 # move(({"direction":"s", "next_room_id": "259"}))
+
+# print(take_treasure(player.room))

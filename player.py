@@ -64,15 +64,18 @@ class Player:
             res = requests.post(self.base_url + endpoint,
                                 headers=headers,
                                 data=json.dumps(data))
-            print(f'------- {res.text} TAKING TREASURE')
-            
+            # print(f'------- {res.text} TAKING TREASURE')
             self.room = json.loads(res.text)
             self.cooldown = self.room['cooldown']  
 
+            
+
             if self.room['errors']:
                 print(self.room['errors'])
+                return res.json()
             else:
                 print(self.room['messages'])
+                return res.json()
 
 # Drop
 
@@ -103,7 +106,7 @@ class Player:
 
         self.p_status = json.loads(res.text)  
         self.cooldown = self.p_status['cooldown']  
-        return res.json()
+        
 
 # Examine
 
@@ -156,5 +159,5 @@ class Player:
 
 # # # Test 
 # P = Player("User 20600", 2)
-# print(P.take())
+# print(P.drop())
 
