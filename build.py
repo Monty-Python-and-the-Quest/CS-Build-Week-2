@@ -3,6 +3,7 @@ import json
 from api_key import API_KEY
 import time
 import ast
+from player import Player
 
 # For O(1) time complexity for append and pop operations
 from collections import deque
@@ -42,6 +43,12 @@ url = "https://lambda-treasure-hunt.herokuapp.com/api"
 headers = {
     "Authorization": API_KEY
 }
+
+# # Player
+player = Player("User 20600", 2)
+
+
+
 
 # INIT FUNCTION
 def init():
@@ -269,6 +276,23 @@ def cooldown_print(seconds):
         print('Done waiting')
 
 
+def take_treasure(self):
+    j = len(player.room['items'])   
+    if j > 0:
+        player.status()
+        # cooldown_print(player.cooldown)
+        time.sleep(player.cooldown)
+        if len(player.p_status['inventory']) < player.p_status['strength']:
+            player.take()
+            time.sleep(player.cooldown)
+        else:
+            print('Inventory is full')
+
+def sell_treasure(self):
+    if player.room['title'] == "Shop":
+        player.sell()
+        time.sleep(player.cooldown)
+
 # To run type - python build.py, uncomment each function to use
 
 # init()
@@ -446,16 +470,21 @@ def step_back():
 
 def algo():
     while len(visited) < 500:
+        take_treasure(player.room)
+        sell_treasure(player.room)
         if len(unexplored_exits) > 0:
-            step_forward()
+            step_forward()    
         else:
             step_back()
 
 # Uncomment to initialize and run algo
-# setup_current_room()
-# algo()
+player.init()
+time.sleep(5)
+setup_current_room()
+algo()
 
 # Uncomment to move manually
+<<<<<<< HEAD
 # move(({"direction":"w"}))
 
 # Uncomment to move manually with room id
@@ -470,3 +499,9 @@ def algo():
 
 # Uncomment to get treasure (put name of treasure in name parameter)
 # take(({"name":"tiny treasure"}))
+=======
+# move(({"direction":"n"}))
+# move(({"direction":"s", "next_room_id": "259"}))
+
+# print(take_treasure(player.room))
+>>>>>>> 367df80a2390ecbe8a8e6bc79b88cbc545b39fbc
