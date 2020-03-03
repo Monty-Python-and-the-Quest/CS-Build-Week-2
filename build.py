@@ -111,6 +111,20 @@ def move(payload):
                 remove_inverse_direction_from_exits(direction["direction"])
                 step_forward()
 
+    elif (len(unexplored_exits) == 0) and (room_id in visited) and (room_id in need_to_explore):
+        print('GO BACK:', room_id)
+        info = []
+        info.append(data)
+        cooldown_print(cooldown)
+        setup_current_room()
+
+        # when we move, need to print to map.txt
+        with open('map.txt', 'a+') as outfile:
+            json.dump        (info, outfile, indent=2)
+
+        remove_inverse_direction_from_exits(direction["direction"])
+        step_forward()
+
     elif (len(unexplored_exits) == 0) and (room_id in visited):
         print('GO BACKWARDS:', room_id)
         info = []
@@ -129,20 +143,7 @@ def move(payload):
         move(direction)
         step_forward()
 
-    elif (len(unexplored_exits) == 0) and (room_id in visited) and (room_id in need_to_explore):
-        print('GO BACK:', room_id)
-        info = []
-        info.append(data)
-        cooldown_print(cooldown)
-        setup_current_room()
 
-        # when we move, need to print to map.txt
-        with open('map.txt', 'a+') as outfile:
-            json.dump        (info, outfile, indent=2)
-
-
-        remove_inverse_direction_from_exits(direction["direction"])
-        step_forward()
 
     elif (len(unexplored_exits) > 0) and (room_id in visited) and (room_id in need_to_explore):
         print('NEW ROOM CENTER IN VISITED (NEED TO EXPLORE):', room_id)
@@ -160,6 +161,7 @@ def move(payload):
 
     elif (len(unexplored_exits) > 0) and (room_id not in visited) and (room_id in need_to_explore):
         print('NEW ROOM CENTER NOT IN VISITED (NEED TO EXPLORE):', room_id)
+        need_to_explore.remove(room_id)
         info = []
         info.append(data)
         cooldown_print(cooldown)
@@ -333,8 +335,10 @@ def algo():
         else:
             step_back()
 
-setup_current_room()
-algo()
+# Uncomment to initialize and run algo
+# setup_current_room()
+# algo()
 
-# init()
-# move(({"direction":"e", "next_room_id": "218"}))
+# Uncomment to move manually
+move(({"direction":"n"}))
+# move(({"direction":"s", "next_room_id": "259"}))
