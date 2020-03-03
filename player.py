@@ -94,7 +94,7 @@ class Player:
             else:
                 print(self.room['messages'])
          
-# Staus
+# Status
 
     def status(self):
         endpoint = "/adv/status/"
