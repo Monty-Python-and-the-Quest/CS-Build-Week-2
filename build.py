@@ -3,6 +3,7 @@ import json
 from api_key import API_KEY
 import time
 import ast
+from player import Player
 
 # For O(1) time complexity for append and pop operations
 from collections import deque
@@ -41,6 +42,12 @@ url = "https://lambda-treasure-hunt.herokuapp.com/api"
 headers = {
     "Authorization": API_KEY
 }
+
+# # Player
+player = Player("User 20600", 2)
+
+
+
 
 # INIT FUNCTION
 def init():
@@ -224,6 +231,17 @@ def cooldown_print(seconds):
         print('Done waiting')
 
 
+def take_treasure(self):
+    if len(player.room['items']) > 0:
+        player.status()
+        time.sleep(player.cooldown)
+        # cooldown_print(player.cooldown)
+        if len(player.p_status['inventory']) < player.p_status['strength']:
+            player.take()
+            time.sleep(player.cooldown)
+        else:
+            print('Inventory is full')
+
 # To run type - python build.py, uncomment each function to use
 
 # init()
@@ -331,14 +349,15 @@ def step_back():
 def algo():
     while len(visited) < 500:
         if len(unexplored_exits) > 0:
+            take_treasure()
             step_forward()
         else:
             step_back()
 
 # Uncomment to initialize and run algo
-# setup_current_room()
-# algo()
+setup_current_room()
+algo()
 
 # Uncomment to move manually
-move(({"direction":"n"}))
+# move(({"direction":"n"}))
 # move(({"direction":"s", "next_room_id": "259"}))

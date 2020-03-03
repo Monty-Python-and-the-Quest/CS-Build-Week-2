@@ -154,7 +154,7 @@ class Player:
 
 
 
-# # Test 
+# # # Test 
 # P = Player("User 20600", 2)
-# print(P.pray())
+# print(P.take())
 
