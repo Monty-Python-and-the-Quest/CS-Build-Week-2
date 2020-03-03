@@ -17,7 +17,7 @@ class Player:
 
         self.cooldown = None  
         self.room = None 
-        
+        self.coin_balance = None
 
 # Init
     def init(self):
@@ -104,15 +104,28 @@ class Player:
 
 # Examine
 
-    def examine(self):
+    def examine(self, item):
         endpoint = "/adv/examine/"
-        data = {"name": "Wishing Well"}
+        data = {"name": item,}
         res = requests.post(self.base_url + endpoint,
                             headers=headers,
                             data=json.dumps(data))
         print(f'------- {res.text} WISHING WELL INFO')
 
-P = Player("User 20600", 2)
+# Balance 
 
-print(P.status())
+    def balance(self):
+        endpoint = '/bc/get_balance'
+        res = requests.get(self.base_url + endpoint, headers=headers)
+
+        self.coin_balance = json.loads(res.text)
+        self.cd = self.coin_balance['cooldown'] 
+        return res.json()
+
+# 
+
+
+# Test 
+P = Player("User 20600", 2)
+print(P.balance())
 
