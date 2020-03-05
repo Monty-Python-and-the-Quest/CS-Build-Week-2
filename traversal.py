@@ -6,17 +6,13 @@ import json
 from util import Queue
 
 
-#TODO api_key = ""
-
 #Endpoint Url
 url = "https://lambda-treasure-hunt.herokuapp.com/api"
 
+#Needed with all requests
 headers = {
-    "Authorization": "Token " #TODO
+    "Authorization": "Token 6220bfb985cd0b87e064e146337deba2c6f69c9a " 
 }
-
-
-
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Player Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -25,7 +21,10 @@ def player_initilization():
     time.sleep(6)
     response = requests.get(f'{url}/adv/init/', headers = headers)
     data = response.json()
+    print("                                                                                                                   ") 
     print("This is th INIT response--->", data)
+    print("                                                                                                                   ") 
+
     return data
 
 #Player Status
@@ -37,7 +36,7 @@ def player_status():
     
 #Player Movement TODO dynamic cooldown pulled off of init res
 def player_move(payload):
-    time.sleep(46)
+    time.sleep(6)
     response = requests.post(f'{url}/adv/move/', data = json.dumps(payload), headers = headers)
     data = response.json()
     
@@ -48,6 +47,8 @@ def player_move(payload):
         json.dump(info, outfile, indent=2)
    
     print("This is the MOVE response--->", data)
+    print("                                                                                                                   ") 
+
     return data
 
 #Item Looting
@@ -60,7 +61,7 @@ def loot_treasure(payload):
     
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Traversal Algorithm WIP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DFT like Traversal Algorithm WIP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 traversal_path = []
 
@@ -68,8 +69,15 @@ traversal_path = []
 map_graph = {}
 
 #Gets room ID
-def get_room_id():
+def get_room_id(cooldown):
+    print("The older cooldown PREINIT time in seconds:", cooldown)
+    print("                                                                                                                   ")
+    time.sleep(cooldown + 6)
     init = player_initilization()
+    new_cooldown = init['cooldown']
+    print("The  new cooldown time in seconds:", new_cooldown)
+    print("                                                                                                                   ")
+    #get cooldown and wait here TODO
     return init['room_id']
 
 
@@ -86,13 +94,15 @@ def initial_room_logger():
     map_graph[room_id] = room
     visited.add(room_id)
     print("Added this room to visited: ", visited)
+    return unexplored
 
 #pulls unexplored exits from map graph
 def pick_unexplored_direction():
     init = player_initilization()
     room_id = init['room_id']
 
-    unexplored = init['unexplored_exits'] #NOT IN THE INIT RESPONSE TODO NEED TO CHANGE THIS TO PULL OFF OF MAP GRAPH
+
+    unexplored = map_graph[room_id]['unexplored_exits'] #NOT IN THE INIT RESPONSE TODO NEED TO CHANGE THIS TO PULL OFF OF MAP GRAPH
     print('THESE ARE THE REMAINING UNEXPLORED DIRECTIONS FROM THIS ROOM ', unexplored)
     
     direction = unexplored[0]
@@ -107,75 +117,106 @@ def pick_unexplored_direction():
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Logic~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 visited = set()
 print(visited)
-
+current_cooldown = 5
 initial_room_logger()
+most_recent_direction = None
+inverse_direction = { "n": "s", "e": "w", "w": "e", "s": "n" }
 
 while len(map_graph) < 500:
-    room_id = get_room_id()
-    print("Current ROOM ID ************", room_id) 
-    print("TEEEEEST", map_graph[room_id]['room_id'])
-    print("TEEEEEST", map_graph[room_id]['unexplored_exits'])
-    if map_graph[room_id]['room_id'] in visited:
-        if (len(map_graph[room_id]['unexplored_exits']) > 0):
-           
-            path = pick_unexplored_direction()
-            print("The unexplored direction chosen ====> ", path)
-            
-            player_move({'direction' : f'{path}'})
-            print("Moved --------------------> ", path)
-            
-            traversal_path.append(path)
-            print("UPDATED Traversal Path~~~~~", traversal_path)
-        else:
-            last_move_direction = traversal_path[-1]
-            traversal_path.pop(-1)
-            print("UPDATED Traversal Path~~~~~", traversal_path)
-            
-            inverse_direction = { "n": "s", "e": "w", "w": "e", "s": "n" }
-            move_back_direction = inverse_direction[last_move_direction]
-
-            
-            print("Move BACK DIRECTION CHOSEN -------", move_back_direction)
-            player_move({'direction' : f'{move_back_direction}'})
-            print("Moved --------------------> ", move_back_direction)
-    elif map_graph[room_id]['room_id'] not in visited:
-        initial_room_logger()
-        if (len(map_graph[room_id]['unexplored_exits']) > 0):
-           
-            path = pick_unexplored_direction()
-            print("The unexplored direction chosen ====> ", path)
-            
-            player_move({'direction' : f'{path}'})
-            print("Moved --------------------> ", path)
-            
-            traversal_path.append(path)
-            print("UPDATED Traversal Path~~~~~", traversal_path)
-        else:
-            last_move_direction = traversal_path[-1]
-            traversal_path.pop(-1)
-            print("UPDATED Traversal Path~~~~~", traversal_path)
-            
-            inverse_direction = { "n": "s", "e": "w", "w": "e", "s": "n" }
-            move_back_direction = inverse_direction[last_move_direction]
-            
-            print("Move BACK DIRECTION CHOSEN -------", move_back_direction)
-            player_move({'direction' : f'{move_back_direction}'})
-            print("Moved --------------------> ", move_back_direction)
-
-
-
-            
-
+    print("                                                                                                                   ") 
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&-----VISITED Beginning of LOOP", visited)
+    print("                                                                                                                   ") 
     
+    room_id = get_room_id(current_cooldown)
+    
+    print("Current ROOM ID ************", room_id)
+    print("                                                                                                                   ") 
+    #print("TEEEEEST", map_graph[room_id]['room_id']) #returns key error if you hit unvisited
+    print("                                                                                                                   ") 
+    #print("************************UNEXPLORED EXITS REMAINING********************", map_graph[room_id]['unexplored_exits']) #returns key error if you hit unvisited
+    print("                                                                                                                   ") 
+    print("THE Most recent direction TAKEN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", most_recent_direction)
+    print("                                                                                                                   ") 
 
+    if room_id in visited:#stable
+        print("VISITED INSIDE LOOP", visited)
+        if (len(map_graph[room_id]['unexplored_exits']) > 0):
+           
+            path = pick_unexplored_direction()
+            print("<==================================================================The unexplored direction chosen =======================> ", path)
+            print("                                                                                                                   ") 
+            
+            data = player_move({'direction' : f'{path}'})
+            most_recent_direction = path
+            new_cooldown = data['cooldown']
+            current_cooldown = new_cooldown
+            print("-----------------------------------------------Moved --------------------> ", path)
+            print("                                                                                                                   ") 
+            
+            traversal_path.append(path)
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~UPDATED Traversal Path~~~~~", traversal_path)
+            print("                                                                                                                   ") 
+        else:
+            last_move_direction = traversal_path[-1]
+            traversal_path.pop(-1)
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~UPDATED Traversal Path~~~~~", traversal_path)
+            print("                                                                                                                   ") 
+            
+            move_back_direction = inverse_direction[last_move_direction]
 
-
-
-
-
-
-
-
+            
+            print("----------------------------------------------------------Move BACK DIRECTION CHOSEN -------", move_back_direction)
+            print("                                                                                                                   ") 
+            data = player_move({'direction' : f'{move_back_direction}'})
+            most_recent_direction = move_back_direction
+            new_cooldown = data['cooldown']
+            current_cooldown = new_cooldown
+            print("----------------------------------------------------------------Moved --------------------> ", move_back_direction)
+            print("                                                                                                                   ") 
+    elif room_id not in visited:
+        unexplored = initial_room_logger()
+        to_be_removed = inverse_direction[most_recent_direction]
+        unexplored.remove(to_be_removed)
+        print("                                                                                                                   ")
+        print("                                                                                                                   ")
+        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CURRENT rooms GRAPH", map_graph[room_id])
+        print('UPDATED UNEXPLORED CIRCUMSTANCE---------------------------------------------------------------->', to_be_removed)
+        print("                                                                                                                   ")
+        print("                                                                                                                   ")
+        
+        if (len(map_graph[room_id]['unexplored_exits']) > 0):
+           
+            path = unexplored[0]
+            ###path = pick_unexplored_direction() updated to remove most recent direction
+            print("<=========================================================The unexplored direction chosen =======================> ", path)
+            print("                                                                                                                   ") 
+            
+            data = player_move({'direction' : f'{path}'})
+            most_recent_direction = path
+            new_cooldown = data['cooldown']
+            current_cooldown = new_cooldown
+            print("--------------------------------------Moved --------------------> ", path)
+            print("                                                                                                                   ") 
+            
+            traversal_path.append(path)
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~UPDATED Traversal Path~~~~~", traversal_path)
+            print("                                                                                                                   ") 
+        else:
+            last_move_direction = traversal_path[-1]
+            traversal_path.pop(-1)
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~UPDATED Traversal Path~~~~~", traversal_path)
+            print("                                                                                                                   ") 
+            
+            move_back_direction = inverse_direction[last_move_direction]
+            
+            print("--------------------------------------Move BACK DIRECTION CHOSEN -------", move_back_direction)
+            print("                                                                                                                   ") 
+            data = player_move({'direction' : f'{move_back_direction}'})
+            most_recent_direction = move_back_direction
+            new_cooldown = data['cooldown']
+            current_cooldown = new_cooldown
+            print("--------------------------------------Moved -----------------------------------> ", move_back_direction)
+            print("                                                                                                                   ") 
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Testing Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,6 +229,15 @@ while len(map_graph) < 500:
 #player_initilization()
 
 #player_status()
+
+# data = player_move({'direction' : 's'})
+# new_cooldown = data['cooldown']
+# print("CURRENT CC", current_cooldown)
+# print("NEW CC", new_cooldown)
+# current_cooldown = new_cooldown
+# print("current AGAIN", current_cooldown)
+
+
 
 #player_move({'direction' : 'n'})
 #player_move({'direction' : 's'})
