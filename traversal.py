@@ -57,6 +57,20 @@ def loot_treasure(payload):
     data = response.json()
     print("This is the LOOT response--->", data)
     return data
+
+# TAKE FUNCTION
+def take(payload):
+    r = requests.post(f'{url}/adv/take', data=json.dumps(payload), headers=headers)
+    data = r.json()
+    info = []
+    info.append(data)
+
+    # 
+    with open('player_status.txt', 'w') as outfile:
+        json.dump(info, outfile, indent=2)
+
+    print(data)
+    return data
     
     
 
@@ -186,7 +200,7 @@ while len(map_graph) < 500:
         
         if (len(map_graph[room_id]['unexplored_exits']) > 0):
            
-            path = unexplored[0]
+            path = unexplored[0]#---FIX NOT REMOVING PATH see line 112 TODO
             ###path = pick_unexplored_direction() updated to remove most recent direction
             print("<=========================================================The unexplored direction chosen =======================> ", path)
             print("                                                                                                                   ") 
@@ -247,3 +261,6 @@ print(map_graph)
 # map_graph[0]['unexplored_exits'].remove('w')
 # print(map_graph[0]['unexplored_exits'])
 # print(len(map_graph[0]['unexplored_exits']))
+
+
+#TODO ideas to improve alfo 1. save move response so you dont have to init 2.fix function replacement fort pick unexplored lack in not visited condition
