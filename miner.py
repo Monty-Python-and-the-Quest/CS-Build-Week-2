@@ -24,4 +24,4 @@ def valid_proof(lb_json, proof, difficulty):
     return guess_hash[:difficulty] == "0" * difficulty
 
 
-print(proof_of_work(37777907, 6))
+#print(proof_of_work(37777907, 6))

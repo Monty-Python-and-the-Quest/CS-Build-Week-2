@@ -11,7 +11,7 @@ url = "https://lambda-treasure-hunt.herokuapp.com/api"
 
 #Needed with all requests
 headers = {
-    "Authorization": "Token 6220bfb985cd0b87e064e146337deba2c6f69c9a " 
+    "Authorization": "Token" 
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Player Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
