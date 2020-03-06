@@ -200,8 +200,8 @@ while len(map_graph) < 500:
         
         if (len(map_graph[room_id]['unexplored_exits']) > 0):
            
-            path = unexplored[0]#---FIX NOT REMOVING PATH see line 112 TODO
-            ###path = pick_unexplored_direction() updated to remove most recent direction
+            path = unexplored[0]#---FIX NOT REMOVING PATH see line 112 ----fixed below
+            map_graph[room_id]['unexplored_exits'].remove(f'{path}')
             print("<=========================================================The unexplored direction chosen =======================> ", path)
             print("                                                                                                                   ") 
             
@@ -263,4 +263,4 @@ print(map_graph)
 # print(len(map_graph[0]['unexplored_exits']))
 
 
-#TODO ideas to improve alfo 1. save move response so you dont have to init 2.fix function replacement fort pick unexplored lack in not visited condition
+#TODO ideas to improve alfo 1. save move response so you dont have to init
