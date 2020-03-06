@@ -478,30 +478,31 @@ def algo():
             step_back()
 
 # Uncomment to initialize and run algo
-player.init()
-time.sleep(5)
-setup_current_room()
-algo()
+# player.init()
+# time.sleep(5)
+# setup_current_room()
+# algo()
+
+# move(({"direction":"n"}))
+# move(({"direction":"s", "next_room_id": "9"}))
+
+# print(take_treasure(player.room))
 
 # Uncomment to move manually
-<<<<<<< HEAD
-# move(({"direction":"w"}))
+# move(({"direction":"s"}))
 
 # Uncomment to move manually with room id
-# move(({"direction":"s", "next_room_id": "19"}))
+# move(({"direction":"e", "next_room_id": "3"}))
 
 # Uncomment to get user status and write to player_status.txt
 # status()
 
 # Uncomment both to sell something (put name of treasure in name parameter)
-# sell(({"name":"tiny treasure"}))
-# confirm_sell(({"name":"tiny treasure", "confirm":"yes"}))
+# sell(({"name":"small treasure"}))
+# confirm_sell(({"name":"small treasure", "confirm":"yes"}))
 
 # Uncomment to get treasure (put name of treasure in name parameter)
-# take(({"name":"tiny treasure"}))
-=======
-# move(({"direction":"n"}))
-# move(({"direction":"s", "next_room_id": "259"}))
+take(({"name":"shiny treasure"}))
 
-# print(take_treasure(player.room))
->>>>>>> 367df80a2390ecbe8a8e6bc79b88cbc545b39fbc
+# init()
+#

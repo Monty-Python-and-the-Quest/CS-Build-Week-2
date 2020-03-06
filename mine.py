@@ -22,3 +22,7 @@ def valid_proof(lb_json, proof, difficulty):
     guess_hash = hashlib.sha256(guess).hexdigest()
 
     return guess_hash[:difficulty] == "0" * difficulty
+
+# 168312
+
+print(proof_of_work(1520492679, 6))
