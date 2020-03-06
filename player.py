@@ -81,7 +81,7 @@ class Player:
 
     def drop(self):
             endpoint = "/adv/drop/"
-            data = {"name": "treasure"}
+            data = {"name": "boots"}
             res = requests.post(self.base_url + endpoint,
                                 headers=headers,
                                 data=json.dumps(data))
@@ -158,7 +158,7 @@ class Player:
 # Sell 
     def sell(self):
         endpoint = "/adv/sell/"
-        data = {"name": "treasure"}
+        data = {"name": "tiny treasure",  "confirm":"yes"}
         res = requests.post(self.base_url + endpoint,
                             headers=headers,
                             data=json.dumps(data))
@@ -175,6 +175,5 @@ class Player:
 
 
 # # # Test 
-# P = Player("User 20600", 2)
-# print(P.drop())
-
+P = Player("User 20600", 2)
+print(P.examine("well"))
