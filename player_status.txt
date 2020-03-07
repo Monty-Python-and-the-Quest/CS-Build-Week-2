@@ -1,0 +1,23 @@
+[
+  {
+    "room_id": 169,
+    "title": "A misty room",
+    "description": "You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.",
+    "coordinates": "(65,63)",
+    "elevation": 0,
+    "terrain": "NORMAL",
+    "players": [],
+    "items": [
+      "tiny treasure"
+    ],
+    "exits": [
+      "s",
+      "e"
+    ],
+    "cooldown": 1.5,
+    "errors": [],
+    "messages": [
+      "You have picked up shiny treasure"
+    ]
+  }
+]
